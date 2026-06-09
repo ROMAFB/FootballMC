@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Roma FB Map - ماب كرة القدم لماين كرافت</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0d1a2b 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Soccer Pattern */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="white" d="M50,5 L61,35 L94,35 L68,52 L79,82 L50,65 L21,82 L32,52 L6,35 L39,35 L50,5Z"/></svg>');
+            background-repeat: repeat;
+            background-size: 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header / Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 40px 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: #2ecc71;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Cards Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 800px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(20, 30, 45, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.3);
+            border-color: rgba(255,215,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-right: 5px solid #FFD700;
+            padding-right: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+        }
+
+        .feature-list li i {
+            width: 30px;
+            color: #FFD700;
+            font-size: 1.3rem;
+        }
+
+        .youtube-section {
+            text-align: center;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .channel-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .channel-name {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .channel-handle {
+            background: #222;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .youtube-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #FF0000;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .youtube-btn:hover {
+            background: #cc0000;
+            transform: scale(1.05);
+        }
+
+        /* Download Section */
+        .download-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            padding: 20px 50px;
+            border-radius: 60px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .download-btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            box-shadow: 0 20px 35px rgba(46,204,113,0.3);
+        }
+
+        .file-info {
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .instructions h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .step {
+            background: rgba(255,255,255,0.05);
+            padding: 15px 20px;
+            border-radius: 60px;
+            width: 200px;
+            text-align: center;
+        }
+
+        .step i {
+            font-size: 1.8rem;
+            color: #FFD700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .download-btn { font-size: 1.2rem; padding: 14px 30px; }
+            .channel-name { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>⚽ ROMA FB MAP ⚽</h1>
+        <div class="tagline">ماب كرة قدم جنوني للأصدقاء | راوغ - سدد - العب باحترافية</div>
+        <div class="badge"><i class="fas fa-futbol"></i> Best Football Map for Minecraft Bedrock</div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Features Card -->
+        <div class="card">
+            <h2><i class="fas fa-star-of-life"></i> مميزات الماب 🔥</h2>
+            <ul class="feature-list">
+                <li><i class="fas fa-futbol"></i> ملعب كرة قدم حديث بجودة عالية</li>
+                <li><i class="fas fa-hand-peace"></i> نظام مراوغة وسيرفر سوبر</li>
+                <li><i class="fas fa-bolt"></i> تسديدات قوية + حركات استعراضية</li>
+                <li><i class="fas fa-bus"></i> باصات وانتزاع الكرة (Tackling)</li>
+                <li><i class="fas fa-users"></i> مثالي للعب مع الأصدقاء 2v2 أو 3v3</li>
+                <li><i class="fas fa-trophy"></i> تحديات وأهداف رائعة</li>
+            </ul>
+        </div>
+
+        <!-- YouTube Channel Card -->
+        <div class="card youtube-section">
+            <h2><i class="fab fa-youtube"></i> قناتي على يوتيوب</h2>
+            <div class="channel-info">
+                <i class="fab fa-youtube" style="font-size: 60px; color: #FF0000;"></i>
+                <div class="channel-name">ROMA SENPAI</div>
+                <div class="channel-handle"><i class="fab fa-youtube"></i> Roma_Senpai@</div>
+                <a href="https://www.youtube.com/@Roma_Senpai" target="_blank" class="youtube-btn">
+                    <i class="fab fa-youtube"></i> زيارة القناة
+                </a>
+                <p style="margin-top: 10px; font-size: 0.8rem;">🔔 اشترك وفعل الجرس عشان كل جديد</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+        <a href="https://www.mediafire.com/file/rn6dldq9gg4qdzn/RomaFB.mcworld/file" class="download-btn" download>
+            <i class="fas fa-download"></i> تحميل الماب الآن
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <div class="file-info">
+            <i class="fas fa-file-archive"></i> بصيغة .mcworld | حجم مناسب | جاهز للتثبيت مباشرة
+        </div>
+    </div>
+
+    <!-- How to Install -->
+    <div class="instructions">
+        <h3><i class="fas fa-cogs"></i> طريقة تثبيت الماب في ماين كرافت</h3>
+        <div class="steps">
+            <div class="step"><i class="fas fa-download"></i> 1. حمل الملف</div>
+            <div class="step"><i class="fas fa-tap"></i> 2. اضغط على الملف</div>
+            <div class="step"><i class="fab fa-minecraft"></i> 3. يفتح ماين كرافت تلقائياً</div>
+            <div class="step"><i class="fas fa-play"></i> 4. ابدأ اللعب مع أصدقائك!</div>
+        </div>
+        <p style="text-align: center; margin-top: 25px;">
+            💡 نصيحة: العب مع أصحابك واستمتعوا بأجواء كرة القدم الحماسية 🔥
+        </p>
+    </div>
+
+    <footer>
+        <i class="fas fa-futbol"></i> ROMA FB MAP - صنع بواسطة ROMA SENPAI<br>
+        حقوق الماب محفوظة | استمتع بالمشاركة مع الأصدقاء
+    </footer>
+</div>
+
+</body>
+</html>
